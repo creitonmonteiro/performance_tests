@@ -7,7 +7,7 @@ export let postbackRandomRequests = new Counter('postbackRandomRequests');
 export let postbackRandomDuration = new Trend('postbackRandomDuration');
 
 export default function () {
-  const url = 'https://hosturl/wiremock/postback/random';
+  const url = '';
 
   group('postbackRandom', function () {
     let res = http.post(url);

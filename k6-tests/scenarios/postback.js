@@ -7,7 +7,7 @@ export let postbackRequests = new Counter('postbackRequests');
 export let postbackDuration = new Trend('postbackDuration');
 
 export default function () {
-  const url = 'https://hosturl/wiremock/postback';
+  const url = '';
 
   group('postback', function () {
     let res = http.post(url);

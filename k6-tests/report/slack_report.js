@@ -7,9 +7,9 @@ function compareWithThreshold(value, threshold) {
 }
 
 export function sendSlackReport(data) {
-  const webhookURL = 'https://hooks.slack.com/services'
+  const webhookURL = ''
 
-  let message = "📝 *Relatório de Teste K6* 📊\n\n";
+  let message = "📝 *Relatório de Teste K6 - Public Wiremock* 📊\n\n";
 
   const scenarioNames = new Set();
   Object.keys(data.metrics).forEach(metric => {
@@ -32,21 +32,16 @@ export function sendSlackReport(data) {
       Object.entries(data.metrics[`http_req_duration{scenario:${scenarioName}}`]?.thresholds).forEach(([thresholdName, thresholdPassed]) => {
         let statusEmoji = thresholdPassed.ok ? "✅" : "❌";
 
-        if (thresholdPassed.ok){
-          thresholdsResults += `${statusEmoji} ${thresholdName}ms\n`
-        }
-        else{
-          thresholdsResults += `${statusEmoji} ${thresholdName}ms - O tempo de resposta p95 desse cenário de teste foi superior ao estabelecido\n`
-        }
+        thresholdsResults = thresholdPassed.ok ? `${statusEmoji} ${thresholdName}ms\n` : `${statusEmoji} ${thresholdName}ms - O tempo de resposta p95 desse cenário de teste foi superior ao estabelecido\n`
       });
     }
 
     message += `🚀 *Cenário: ${scenarioName}*\n` +
                `✅ Requests: ${totalRequests}\n` +
                `⏱ Média: ${avgDuration}ms\n` +
-               `📊 p95: ${p95Duration}ms\n` +
-               `❌ Erros: ${errorRate}%\n` +
-               `📌 *Thresholds:*\n${thresholdsResults}\n`;
+               `📊 P95: ${p95Duration}ms\n` +
+               `❌ Erros: ${errorRate}%\n\n` +
+               `📌 *Thresholds:*\n${thresholdsResults}\n\n`;
   });
 
   const totalRequests = data.metrics['http_reqs']?.values?.count || 0;
@@ -59,7 +54,7 @@ export function sendSlackReport(data) {
   message += `📊 *Resumo Total*\n` +
              `✅ Requests Totais: ${totalRequests}\n` +
              `⏱ Média Geral: ${avgDuration}ms\n` +
-             `📊 p95 Geral: ${p95Duration}ms\n` +
+             `📊 P95 Geral: ${p95Duration}ms\n` +
              `❌ Taxa de Erro Total: ${errorRate}%\n`;
 
   let payload = JSON.stringify({ text: message });
